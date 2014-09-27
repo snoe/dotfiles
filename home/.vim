@@ -1,1 +1,0 @@
-/Users/snoe/myvim/.vim
