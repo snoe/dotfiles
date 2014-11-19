@@ -23,6 +23,8 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-classpath.git'
 Bundle 'tpope/vim-fireplace.git'
 Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-sexp-mappings-for-regular-people'
+Bundle 'guns/vim-sexp.git'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-unimpaired'
@@ -114,6 +116,8 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+cmap pb Piggieback (weasel.repl.websocket/repl-env :ip "0.0.0.0" :port 9001)
 
 noremap <C-p> :FuzzyFinderFile **/
 
