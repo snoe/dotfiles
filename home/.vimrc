@@ -11,7 +11,8 @@ Bundle 'gmarik/vundle'
 " Keep bundle commands between here and filetype plugin indent on.
 " scripts on GitHub repos
 Bundle 'MHordecki/vim-subword'
-Bundle 'fholgado/minibufexpl.vim'
+Bundle 'bling/vim-airline'
+Bundle 'guns/vim-clojure-highlight'
 Bundle 'guns/vim-clojure-static.git'
 Bundle 'guns/vim-sexp.git'
 Bundle 'kien/ctrlp.vim'
@@ -76,11 +77,9 @@ autocmd FileType ruby setlocal shiftwidth=2 tabstop=2 softtabstop=2
 syntax on
 map Y y$
 
-" Minibuf config
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1 
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:ctrlp_root_markers = ['project.clj']
 
 let mapleader = ","
 
