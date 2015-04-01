@@ -1,5 +1,8 @@
 tmp/*
-bundle
-backup
+!tmp/.gitkeep
+bundle/*
+!bundle/Vundle.vim
+backup/*
+!backup/.gitkeep
 .VimballRecord 
 .netrwhist 
