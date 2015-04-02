@@ -3,14 +3,15 @@ filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#rc()
+call vundle#begin()
 " let Vundle manage Vundle, required
-Bundle 'gmarik/vundle'
+Bundle 'gmarik/Vundle.vim'
 
 " The following are examples of different formats supported.
 " Keep bundle commands between here and filetype plugin indent on.
 " scripts on GitHub repos
 Bundle 'MHordecki/vim-subword'
+Bundle 'airblade/vim-gitgutter'
 Bundle 'bling/vim-airline'
 Bundle 'guns/vim-clojure-highlight'
 Bundle 'guns/vim-clojure-static.git'
@@ -19,7 +20,7 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'rking/ag.vim'
 Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-fireplace.git'
+Bundle 'tpope/vim-fireplace'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-repeat'
@@ -30,6 +31,8 @@ Bundle 'vim-scripts/paredit.vim'
 " scripts from http://vim-scripts.org/vim/scripts.html
 Bundle 'gitignore'
 
+" All of your Plugins must be added before the following line
+call vundle#end()
 filetype plugin indent on     
 
 set nocompatible
@@ -58,6 +61,7 @@ set showcmd
 " highlight searchs
 set hlsearch
 set incsearch
+
 " case insensitive unless caps
 set ignorecase
 set smartcase
@@ -79,6 +83,8 @@ map Y y$
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#buffer_nr_format = '%s|'
+set laststatus=2
 let g:ctrlp_root_markers = ['project.clj']
 
 let mapleader = ","
