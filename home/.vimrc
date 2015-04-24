@@ -37,6 +37,8 @@ filetype plugin indent on
 
 set nocompatible
 set number
+set splitbelow
+set splitright
 
 " set mouse=a
 :noremap <LeftRelease> "+y<LeftRelease>
@@ -84,14 +86,18 @@ map Y y$
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#buffer_nr_format = '%s|'
+let g:airline#extensions#hunks#enabled = 0
 set laststatus=2
 let g:ctrlp_root_markers = ['project.clj']
 
 let mapleader = ","
 
 " Paredit
+"
+let g:paredit_leader = '\'
 let g:paredit_electric_return = 1
 let g:paredit_smartjump = 1
+let g:paredit_matchlines = 2000
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
@@ -136,17 +142,32 @@ nnoremap <silent> <C-L> :nohls<CR><C-L>
 
 " select function
 " map t ? function <CR>f{vaBV
-autocmd FileType c,cpp,python,ruby,java,coffee,less,scss,css,clojure autocmd BufWritePre <buffer> :%s/\s\+$//e
+autocmd FileType c,cpp,python,ruby,java,coffee,less,scss,css,clojure autocmd BufWritePre <buffer> :exe '%s/\s\+$//e'
 au BufNewFile,BufRead *.less set filetype=less
 
 let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build'] 
 "let g:clojure_align_subforms = 1
-let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build'] 
+let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build', '^def', '^.*loop$', '^-'] 
 let g:clojure_special_indent_words = 'defprotocol,'
 
 " CLOJURE BINDINGS
+
+nmap <Leader>F <Plug>FireplacePrint<Plug>(sexp_outer_top_list)``
+nmap <Leader>f <Plug>FireplacePrint<Plug>(sexp_outer_list)``
+nmap <Leader>e <Plug>FireplacePrint<Plug>(sexp_inner_element)``
+nmap <Leader>E :%Eval<CR>
+nmap <Leader>r \I
+nmap <Leader>w[ \w[
+nmap <Leader>w{ \w{
+nmap <Leader>w" \w"
+vmap <Leader>w[ \w[
+vmap <Leader>w{ \w{
+vmap <Leader>w" \w"
+    
+
 let g:sexp_mappings = {
     \ 'sexp_indent_top':                '=-',
+    \ 'sexp_round_head_wrap_element':   '<Leader>W',
     \ 'sexp_swap_element_backward':     '<Leader>t',
     \ 'sexp_swap_element_forward':      '<Leader>T',
     \ 'sexp_emit_head_element':         '<Leader>{',
