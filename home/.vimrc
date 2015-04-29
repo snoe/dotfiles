@@ -71,6 +71,10 @@ set smartcase
 set ruler
 set confirm
 set notimeout ttimeout ttimeoutlen=200
+if has('nvim')
+  set ttimeout
+  set ttimeoutlen=0
+endif
 
 set softtabstop=2
 set shiftwidth=2
