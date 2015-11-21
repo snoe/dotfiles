@@ -10,9 +10,10 @@ Bundle 'gmarik/Vundle.vim'
 " The following are examples of different formats supported.
 " Keep bundle commands between here and filetype plugin indent on.
 " scripts on GitHub repos
-Bundle 'MHordecki/vim-subword'
 Bundle 'airblade/vim-gitgutter'
+"Bundle 'aquach/vim-http-client'
 Bundle 'bling/vim-airline'
+Bundle 'ntpeters/vim-airline-colornum'
 Bundle 'guns/vim-clojure-highlight'
 Bundle 'guns/vim-clojure-static.git'
 Bundle 'guns/vim-sexp.git'
@@ -26,7 +27,11 @@ Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-unimpaired'
-Bundle 'vim-scripts/paredit.vim'
+Bundle 'lambdatoast/elm.vim'
+Bundle 'venantius/vim-cljfmt'
+Bundle 'neovim/node-host'
+"Bundle 'vim-scripts/paredit.vim'
+"Bundle 'snoe/nvim-parinfer.js'
 
 " scripts from http://vim-scripts.org/vim/scripts.html
 Bundle 'gitignore'
@@ -45,7 +50,8 @@ set splitright
 set t_Co=256
 set background=dark
 colorscheme molokai
-set cursorline
+set cursorline cursorcolumn
+highlight CursorColumn ctermbg=233
 
 " allow unsaved buffers
 set hidden
@@ -71,6 +77,8 @@ set smartcase
 set ruler
 set confirm
 set notimeout ttimeout ttimeoutlen=200
+
+" disable sticky esc key 
 if has('nvim')
   set ttimeout
   set ttimeoutlen=0
@@ -83,6 +91,7 @@ set expandtab
 set smartindent
 set autoindent
 autocmd FileType ruby setlocal shiftwidth=2 tabstop=2 softtabstop=2
+au FocusLost * silent! wa
 
 syntax on
 map Y y$
@@ -93,8 +102,9 @@ let g:airline#extensions#tabline#buffer_nr_format = '%s|'
 let g:airline#extensions#hunks#enabled = 0
 set laststatus=2
 let g:ctrlp_root_markers = ['project.clj']
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
 
-let mapleader = ","
+let mapleader = " "
 
 " Paredit
 "
@@ -102,6 +112,13 @@ let g:paredit_leader = '\'
 let g:paredit_electric_return = 1
 let g:paredit_smartjump = 1
 let g:paredit_matchlines = 2000
+let g:clj_fmt_autosave = 1
+
+" Hopefully parinfer covers this
+let g:sexp_enable_insert_mode_mappings = 0
+let g:paredit_mode = 0
+let g:paredit_electric_return = 0
+
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
@@ -129,8 +146,6 @@ au Syntax * RainbowParenthesesLoadBraces
 
 cmap pb Piggieback (weasel.repl.websocket/repl-env :ip "0.0.0.0" :port 9001)
 
-noremap <C-p> :FuzzyFinderFile **/
-
 set backup
 set backupdir=~/.vim/backup
 set directory=~/.vim/tmp
@@ -144,36 +159,59 @@ inoremap <Nul> <C-x><C-o>
 " clear search
 nnoremap <silent> <C-L> :nohls<CR><C-L>
 
-" select function
-" map t ? function <CR>f{vaBV
-autocmd FileType c,cpp,python,ruby,java,coffee,less,scss,css,clojure autocmd BufWritePre <buffer> :exe '%s/\s\+$//e'
-au BufNewFile,BufRead *.less set filetype=less
+" tab
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
 
-let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build'] 
+" whitespace
+autocmd FileType c,cpp,python,ruby,java,coffee,less,scss,css,clojure,yaml,make autocmd BufWritePre <buffer> :exe '%s/\s\+$//e'
+
+au BufNewFile,BufRead *.less set filetype=less
+au BufNewFile,BufRead *.json.template set filetype=javascript
+au BufNewFile,BufRead *.json set filetype=javascript
+
+
 "let g:clojure_align_subforms = 1
-let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build', '^def', '^.*loop$', '^-'] 
+let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build', '^def', '^.*loop$', '^-', '^this-as', '^with-', '^GET', '^POST', '^PUT', '^DELETE', '^PATCH', '^ANY', '^context', 'register'] 
 let g:clojure_special_indent_words = 'defprotocol,'
+let g:clojure_fuzzy_indent_blacklist = ['->', '->>', 'as->']
+let g:clojure_align_subforms = 1
 
 " CLOJURE BINDINGS
 
 nmap <Leader>F <Plug>FireplacePrint<Plug>(sexp_outer_top_list)``
 nmap <Leader>f <Plug>FireplacePrint<Plug>(sexp_outer_list)``
 nmap <Leader>e <Plug>FireplacePrint<Plug>(sexp_inner_element)``
+nmap <Leader>d [<C-D>
 nmap <Leader>E :%Eval<CR>
-nmap <Leader>r \I
-nmap <Leader>w[ \w[
-nmap <Leader>w{ \w{
-nmap <Leader>w" \w"
-vmap <Leader>w[ \w[
-vmap <Leader>w{ \w{
-vmap <Leader>w" \w"
-    
+nmap <Leader>R :Require!<CR>
+nmap <Leader>w( ysae)
+nmap <Leader>w[ ysae]
+nmap <Leader>w{ ysae}
+nmap <Leader>w" ysaW"
+vmap <Leader>w( S)
+vmap <Leader>w[ S]
+vmap <Leader>w{ S}
+vmap <Leader>w" S"
 
 let g:sexp_mappings = {
+    \ 'sexp_outer_list':                'af',
+    \ 'sexp_inner_list':                'if',
+    \ 'sexp_outer_top_list':            'aF',
+    \ 'sexp_inner_top_list':            'iF',
+    \ 'sexp_outer_string':              'as',
+    \ 'sexp_inner_string':              'is',
+    \ 'sexp_outer_element':             'ae',
+    \ 'sexp_inner_element':             'ie',
+    \ 'sexp_move_to_prev_bracket':      '(',
+    \ 'sexp_move_to_next_bracket':      ')',
     \ 'sexp_indent_top':                '=-',
     \ 'sexp_round_head_wrap_element':   '<Leader>W',
     \ 'sexp_swap_element_backward':     '<Leader>t',
     \ 'sexp_swap_element_forward':      '<Leader>T',
+    \ 'sexp_raise_element':             '<Leader>r',
     \ 'sexp_emit_head_element':         '<Leader>{',
     \ 'sexp_emit_tail_element':         '<Leader>}',
     \ 'sexp_capture_prev_element':      '<Leader>[',
