@@ -31,7 +31,7 @@ Bundle 'lambdatoast/elm.vim'
 Bundle 'venantius/vim-cljfmt'
 Bundle 'neovim/node-host'
 "Bundle 'vim-scripts/paredit.vim'
-"Bundle 'snoe/nvim-parinfer.js'
+Bundle 'snoe/nvim-parinfer.js'
 
 " scripts from http://vim-scripts.org/vim/scripts.html
 Bundle 'gitignore'
@@ -88,7 +88,6 @@ set softtabstop=2
 set shiftwidth=2
 set tabstop=2
 set expandtab
-set smartindent
 set autoindent
 autocmd FileType ruby setlocal shiftwidth=2 tabstop=2 softtabstop=2
 au FocusLost * silent! wa
@@ -118,7 +117,6 @@ let g:clj_fmt_autosave = 1
 let g:sexp_enable_insert_mode_mappings = 0
 let g:paredit_mode = 0
 let g:paredit_electric_return = 0
-
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
@@ -159,7 +157,7 @@ inoremap <Nul> <C-x><C-o>
 " clear search
 nnoremap <silent> <C-L> :nohls<CR><C-L>
 
-" tab
+" tab keeps visual mode - sorta works
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
 vnoremap <Tab> >gv
@@ -186,7 +184,7 @@ nmap <Leader>f <Plug>FireplacePrint<Plug>(sexp_outer_list)``
 nmap <Leader>e <Plug>FireplacePrint<Plug>(sexp_inner_element)``
 nmap <Leader>d [<C-D>
 nmap <Leader>E :%Eval<CR>
-nmap <Leader>R :Require!<CR>
+nmap <Leader>R cqp(require 'clojure.tools.namespace.repl) (clojure.tools.namespace.repl/refresh)<CR>
 nmap <Leader>w( ysae)
 nmap <Leader>w[ ysae]
 nmap <Leader>w{ ysae}
@@ -217,3 +215,4 @@ let g:sexp_mappings = {
     \ 'sexp_capture_prev_element':      '<Leader>[',
     \ 'sexp_capture_next_element':      '<Leader>]',
     \ } 
+
