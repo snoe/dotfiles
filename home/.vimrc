@@ -116,23 +116,23 @@ let mapleader = " "
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['blue',        'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['yellow',      'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['blue',        'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen2'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
+      \ ['brown',       'RoyalBlue3'],
+      \ ['blue',        'SeaGreen3'],
+      \ ['darkgray',    'DarkOrchid3'],
+      \ ['darkgreen',   'firebrick3'],
+      \ ['darkcyan',    'RoyalBlue3'],
+      \ ['darkred',     'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['brown',       'firebrick3'],
+      \ ['gray',        'RoyalBlue3'],
+      \ ['yellow',      'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['blue',        'firebrick3'],
+      \ ['darkgreen',   'RoyalBlue3'],
+      \ ['darkcyan',    'SeaGreen2'],
+      \ ['darkred',     'DarkOrchid3'],
+      \ ['red',         'firebrick3'],
+      \ ]
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
@@ -197,32 +197,32 @@ vmap <Leader>w[ S]
 vmap <Leader>w{ S}
 vmap <Leader>w" S"
 
-nmap <S-Right> <Plug>(sexp_capture_next_element)<Plug>(sexp_indent_top)
-nmap <S-Left> <Plug>(sexp_emit_tail_element)<Plug>(sexp_indent_top)
-imap <S-Right> <C-O><Plug>(sexp_capture_next_element)<Plug>(sexp_indent_top)
-imap <S-Left> <C-O><Plug>(sexp_emit_tail_element)<Plug>(sexp_indent_top)
+nmap <S-Right> <Plug>(sexp_capture_next_element):exe "normal gg=G<C-o><C-o>"<CR>
+nmap <S-Left> <Plug>(sexp_emit_tail_element):exe "normal gg=G<C-o><C-o>"<CR>
+imap <S-Right> <C-O><Plug>(sexp_capture_next_element)<C-O>:exe "normal gg=G<C-o><C-o>"<CR>
+imap <S-Left> <C-O><Plug>(sexp_emit_tail_element)<C-O>:exe "normal gg=G<C-o><C-o>"<CR>
 
 let g:sexp_mappings = {
-    \ 'sexp_outer_list':                'af',
-    \ 'sexp_inner_list':                'if',
-    \ 'sexp_outer_top_list':            'aF',
-    \ 'sexp_inner_top_list':            'iF',
-    \ 'sexp_outer_string':              'as',
-    \ 'sexp_inner_string':              'is',
-    \ 'sexp_outer_element':             'ae',
-    \ 'sexp_inner_element':             'ie',
-    \ 'sexp_move_to_prev_bracket':      '(',
-    \ 'sexp_move_to_next_bracket':      ')',
-    \ 'sexp_indent_top':                '=-',
-    \ 'sexp_round_head_wrap_element':   '<Leader>W',
-    \ 'sexp_swap_element_backward':     '<Leader>T',
-    \ 'sexp_swap_element_forward':      '<Leader>t',
-    \ 'sexp_raise_element':             '<Leader>r',
-    \ 'sexp_emit_head_element':         '<Leader>{',
-    \ 'sexp_emit_tail_element':         '<Leader>}',
-    \ 'sexp_capture_prev_element':      '<Leader>[',
-    \ 'sexp_capture_next_element':      '<Leader>]',
-    \ } 
+      \ 'sexp_outer_list':                'af',
+      \ 'sexp_inner_list':                'if',
+      \ 'sexp_outer_top_list':            'aF',
+      \ 'sexp_inner_top_list':            'iF',
+      \ 'sexp_outer_string':              'as',
+      \ 'sexp_inner_string':              'is',
+      \ 'sexp_outer_element':             'ae',
+      \ 'sexp_inner_element':             'ie',
+      \ 'sexp_move_to_prev_bracket':      '(',
+      \ 'sexp_move_to_next_bracket':      ')',
+      \ 'sexp_indent_top':                '=-',
+      \ 'sexp_round_head_wrap_element':   '<Leader>W',
+      \ 'sexp_swap_element_backward':     '<Leader>T',
+      \ 'sexp_swap_element_forward':      '<Leader>t',
+      \ 'sexp_raise_element':             '<Leader>r',
+      \ 'sexp_emit_head_element':         '<Leader>{',
+      \ 'sexp_emit_tail_element':         '<Leader>}',
+      \ 'sexp_capture_prev_element':      '<Leader>[',
+      \ 'sexp_capture_next_element':      '<Leader>]',
+      \ } 
 
 if !has("nvim")
   echo "VIM"
