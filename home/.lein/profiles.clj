@@ -32,28 +32,13 @@
 
  :repl
  {:plugins
-  [[refactor-nrepl "2.0.0"]
-   [cider/cider-nrepl "0.9.1" :exclusions [org.clojure/tools.namespace]]]
+  [[refactor-nrepl "2.2.0"]
+   [cider/cider-nrepl "0.13.0"]]
 
   :dependencies
-  [[javert "0.2.0-SNAPSHOT"]
-   [clj-stacktrace "0.2.8"]
-   [cljfmt "0.5.3" :exclusions [org.clojure/clojure org.clojure/clojurescript]]
-   [ritz/ritz-nrepl-middleware "0.7.0"]
-   [org.clojure/tools.namespace "0.2.10"]
-   [slamhound "1.5.5"]
-   [com.cemerick/piggieback "0.2.1"]
-   [org.clojure/tools.nrepl "0.2.10"]
-   [figwheel-sidecar "0.5.0-2"]]
+  [[org.clojure/tools.nrepl "0.2.12"]]
 
   :injections
   [(require '[clojure.string :as string])
-   (require '[clojure.pprint :refer [pprint]])]
-
-  :repl-options
-  {:nrepl-middleware
-   [inspector.middleware/wrap-inspect
-    ritz.nrepl.middleware.javadoc/wrap-javadoc
-    ritz.nrepl.middleware.apropos/wrap-apropos
-    cemerick.piggieback/wrap-cljs-repl]}}}
+   (require '[clojure.pprint :refer [pprint]])] }}
 
