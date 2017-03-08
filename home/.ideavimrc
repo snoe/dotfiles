@@ -1,0 +1,49 @@
+noremap J :action EditorJoinLines<CR>
+
+noremap <S-Right> :action :cursive.actions.paredit/slurp-forwards<CR>
+noremap <S-Left> :action :cursive.actions.paredit/barf-forwards<CR>
+inoremap <S-Right> <ESC>:action :cursive.actions.paredit/slurp-forwards<CR>a
+inoremap <S-Left> <ESC>:action :cursive.actions.paredit/barf-forwards<CR>a
+noremap daf :action :cursive.actions.paredit/kill<CR>
+noremap dw :action :cursive.actions.paredit/kill-sexp<CR>
+noremap dd 0:action :cursive.actions.paredit/kill<CR>
+noremap <Space>r :action :cursive.actions.paredit/raise<CR>
+noremap <Space>R :action Cursive.Repl.Command.refresh-repl<CR>
+noremap <Space>t :action :cursive.actions.paredit/move-form-down<CR>
+noremap <Space>T :action :cursive.actions.paredit/move-form-up<CR>
+noremap crtf :action :cursive.actions.paredit/thread-form<CR>
+noremap crua :action :cursive.actions.paredit/unthread-form<CR>
+noremap <Space>F :action :cursive.repl.actions/run-top-sexp<CR>
+noremap cpp :action :cursive.repl.actions/run-last-sexp<CR>
+noremap <Space>W :action :cursive.actions.paredit/wrap-paren<CR>i
+noremap <Space>w( :action :cursive.actions.paredit/wrap-paren<CR>
+noremap <Space>w{ :action :cursive.actions.paredit/wrap-curly<CR>
+noremap <Space>w[ :action :cursive.actions.paredit/wrap-square<CR>
+noremap <Space>w" :action :cursive.actions.paredit/wrap-quotes<CR>
+noremap <Space>= :action :cursive.actions.paredit/toggle<CR>:action :cursive.actions.paredit/toggle<CR>kj:action :cursive.actions.paredit/toggle<CR>:action ReformatCode<CR>
+onoremap af :<c-u>goto 10<CR>vw
+
+noremap dae :action EditorSelectWord<CR>d
+
+noremap [b :action PreviousTab<CR>
+noremap ]b :action NextTab<CR>
+
+onoremap af i[
+
+set iskeyword+=?,-,*,!,+,/,=,<,>,.,:
+set visualbell
+set noerrorbells
+set clipboard+=unnamed
+set showmode
+
+" highlight searchs
+set hlsearch
+set incsearch
+
+" case insensitive unless caps
+set ignorecase
+set smartcase
+
+" enable vim-surround plugin
+set surround
+
