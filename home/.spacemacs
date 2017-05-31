@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp -*-
+;s -*- mode: emacs-lisp -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -31,7 +31,16 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     csv
+     ruby
+     javascript
+     yaml
+     sql
+     html
+     markdown
      clojure
+     themes-megapack
+     evil-smartparens
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -41,21 +50,25 @@ values."
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
-     ;; git
+     git
      ;; markdown
      ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
-     ;; version-control
+     syntax-checking
+     (version-control :variables
+                      version-control-diff-side 'left
+                      version-control-diff-tool 'git-gutter
+                      version-control-global-margin t)
+
      )
    ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
+   ;; wrapped in a layer. If you need some configuration for these)
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(flycheck-joker)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -111,7 +124,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -127,7 +140,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(monokai
+                         spacemacs-dark
                          spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -281,7 +295,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup 'trailing
    ))
 
 (defun dotspacemacs/user-init ()
@@ -291,6 +305,9 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+
+  (setq find-file-visit-truename t)
+  (setq vc-follow-symlinks t)
   )
 
 (defun noprompt/forward-transpose-sexps ()
@@ -312,17 +329,182 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (setq cljr-favor-prefix-notation nil)
-  (setq evil-lisp-state-enter-lisp-state-on-command nil)
-  (spacemacs/set-leader-keys "kT" 'noprompt/backward-transpose-sexps)
-  (spacemacs/set-leader-keys "kt" 'noprompt/forward-transpose-sexps)
-  (define-key evil-normal-state-map (kbd "S-<right>") " ks")  ; forward slurp
-  (define-key evil-normal-state-map (kbd "S-<left>") " kb")  ; barf 
-  (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
-  (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-  (global-set-key [mouse-4] 'scroll-down-line)
-  (global-set-key [mouse-5] 'scroll-up-line)
+  (message "user-config start")
+
+  (progn
+    ;; Emacs config
+    (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
+    (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+    (global-set-key [mouse-4] (lambda () (interactive) (scroll-down 1)))
+    (global-set-key [mouse-5] (lambda () (interactive) (scroll-up 1)))
+
+    (setq syntax-checking-enable-tooltips nil)
+
+    (with-eval-after-load 'evil
+      (defalias #'backward-evil-word #'backward-evil-symbol)
+      (defalias #'forward-evil-word #'forward-evil-symbol)))
+
+  (progn
+    ;; Gutters
+    (setq-default
+     linum-format "%4s \u2502")
+    (set-face-attribute
+     'git-gutter:added nil :background nil :foreground "green")
+    (set-face-attribute
+     'git-gutter:deleted nil :background nil :foreground "red")
+    (set-face-attribute
+     'git-gutter:modified nil :background nil :foreground "blue")
+
+    (setq-default
+     git-gutter:modified-sign "~"))
+
+  (progn
+    ;; Clojure
+    (require 'flycheck-joker)
+
+    (spacemacs/toggle-aggressive-indent-on)
+    (spacemacs/toggle-syntax-checking-on)
+
+    (add-hook 'clojure-mode-hook 'aggressive-indent-mode)
+    (add-hook 'clojure-mode-hook 'flycheck-mode)
+
+    (setq cljr-warn-on-eval nil)
+
+    (setq evil-lisp-state-enter-lisp-state-on-command nil)
+    ;; TODO make cljs repl work
+    (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
+    (setq cider-show-error-buffer t)
+
+
+    ;; Style Guide
+    (setq cljr-favor-prefix-notation nil)
+    (setq clojure-indent-style ':align-arguments)
+    (setq clojure-use-metadata-for-privacy t)
+    (with-eval-after-load 'clojure-mode
+      (defun spacemacs/error-delegate () 'flycheck)
+
+      (spacemacs/error-delegate)
+
+      (put-clojure-indent 'context :defn)
+      (put-clojure-indent 'GET :defn)
+      (put-clojure-indent 'ANY :defn)
+
+      (put-clojure-indent 'PATCH :defn)
+      (put-clojure-indent 'POST :defn)
+      (put-clojure-indent 'PUT :defn)
+      (put-clojure-indent 'DELETE :defn)
+
+      (put-clojure-indent 'match 1)
+      (put-clojure-indent 'are 1)
+      (put-clojure-indent 'ns '(:defn (:defn)))))
+
+  (progn
+    ;; other lang settings
+    (setq css-indent-offset 2))
+  ;; (setq git-gutter-fr+:side 'right-fringe)
+
+  (progn
+    ;; mappings
+
+    ;; eval region as operator
+    (evil-define-operator snoe/repl-eval-region (beg end type register yank-handler)
+      (cider-eval-region beg end))
+
+    ;; vim-sexp type objects
+    (evil-define-text-object snoe/a-form (count &optional beg end type)
+      (forward-char 1)
+      (let ((enc (sp-get-enclosing-sexp count)))
+        (forward-char -1)
+        (if enc
+            (evil-range (sp-get enc :beg) (sp-get enc :end))
+          (setq count 0))))
+
+    (evil-define-text-object snoe/in-form (count &optional beg end type)
+      (forward-char 1)
+      (let ((enc (sp-get-enclosing-sexp count)))
+        (forward-char -1)
+        (if enc
+            (evil-range (sp-get enc :beg-in) (sp-get enc :end-in))
+          (setq count 0))))
+
+    (spacemacs/set-leader-keys "kT" 'noprompt/backward-transpose-sexps)
+    (spacemacs/set-leader-keys "kt" 'noprompt/forward-transpose-sexps)
+    (define-key evil-normal-state-map (kbd "S-<right>") " ks")  ; forward slurp
+    (define-key evil-normal-state-map (kbd "S-<left>") " kb")  ; barf
+    (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "eo" 'snoe/repl-eval-region)
+    (define-key evil-outer-text-objects-map "f" 'snoe/a-form)
+    (define-key evil-inner-text-objects-map "f" 'snoe/in-form))
+
+  (message "user-config done")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
+ '(compilation-message-face (quote default))
+ '(custom-safe-themes
+   (quote
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" default)))
+ '(evil-want-Y-yank-to-eol t)
+ '(fci-rule-color "#3C3D37" t)
+ '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-tail-colors
+   (quote
+    (("#3C3D37" . 0)
+     ("#679A01" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#3C3D37" . 100))))
+ '(magit-diff-use-overlays nil)
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(package-selected-packages
+   (quote
+    (csv-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby flycheck-joker web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc coffee-mode clojure-mode-extra-font-locking yaml-mode evil-smartparens zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-cleverparens sql-indent tabbar web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode mmm-mode markdown-toc markdown-mode gh-md smeargle orgit org magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-commit with-editor git-gutter flycheck-pos-tip pos-tip flycheck diff-hl ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree elisp-slime-nav dumb-jump f diminish define-word column-enforce-mode clj-refactor hydra inflections edn multiple-cursors paredit yasnippet s peg clean-aindent-mode cider-eval-sexp-fu eval-sexp-fu highlight cider seq spinner queue pkg-info clojure-mode epl bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(pos-tip-background-color "#A6E22E")
+ '(pos-tip-foreground-color "#272822")
+ '(safe-local-variable-values (quote ((ffip-project-file . "project.clj"))))
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#F92672")
+     (40 . "#CF4F1F")
+     (60 . "#C26C0F")
+     (80 . "#E6DB74")
+     (100 . "#AB8C00")
+     (120 . "#A18F00")
+     (140 . "#989200")
+     (160 . "#8E9500")
+     (180 . "#A6E22E")
+     (200 . "#729A1E")
+     (220 . "#609C3C")
+     (240 . "#4E9D5B")
+     (260 . "#3C9F79")
+     (280 . "#A1EFE4")
+     (300 . "#299BA6")
+     (320 . "#2896B5")
+     (340 . "#2790C3")
+     (360 . "#66D9EF"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:background nil))))
+ '(evil-search-highlight-persist-highlight-face ((t (:background "color-52")))))
