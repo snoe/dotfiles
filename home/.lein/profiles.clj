@@ -9,7 +9,6 @@
    [lein-deploy-deps "0.1.0"]
    [com.jakemccrary/lein-test-refresh "0.18.0"]]
 
-
   :dependencies
   [[clj-stacktrace "0.2.8"]
    [pjstadig/humane-test-output "0.7.1" :exclusions  [[org.clojure/clojure]]]
@@ -32,11 +31,11 @@
 
  :repl
  {:plugins
-  [[refactor-nrepl "2.2.0"]
-   [cider/cider-nrepl "0.13.0"]]
+  [[refactor-nrepl "2.3.0-SNAPSHOT"]
+   [cider/cider-nrepl "0.15.0-SNAPSHOT"]]
 
   :dependencies
-  [[org.clojure/tools.nrepl "0.2.12"]]
+  [[org.clojure/tools.nrepl "0.2.12" :exclusions [org.clojure/clojure]]]
 
   :injections
   [(require '[clojure.string :as string])

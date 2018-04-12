@@ -1,52 +1,48 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+call plug#begin('~/.vim/bundle')
+"" Plug 'aquach/vim-http-client'
+Plug 'guns/vim-sexp'
+"" Plug 'vim-scripts/paredit.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'bling/vim-airline'
+Plug 'ntpeters/vim-airline-colornum'
+Plug 'guns/vim-clojure-static'
+Plug 'kien/ctrlp.vim'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'rking/ag.vim'
+" Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fireplace'
+" Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep bundle commands between here and filetype plugin indent on.
-" scripts on GitHub repos
-Plugin 'airblade/vim-gitgutter'
-"Plugin 'aquach/vim-http-client'
-Plugin 'bling/vim-airline'
-Plugin 'ntpeters/vim-airline-colornum'
-Plugin 'guns/vim-clojure-static.git'
-Plugin 'kien/ctrlp.vim'
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'rking/ag.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-fireplace'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'lambdatoast/elm.vim'
-"Plugin 'venantius/vim-cljfmt'
-Plugin 'guns/vim-sexp.git'
-Plugin 'vim-scripts/paredit.vim'
-
-if has("nvim")
-  Plugin 'neovim/node-host'
-  Plugin 'hylang/vim-hy'
-  "Plugin 'hkupty/acid.nvim'
-  Plugin 'clojure-vim/clj-refactor.nvim'
-  "Plugin 'clojure-vim/nvim-parinfer.js'
-  "Plugin 'file:///Users/case/dev/nvim-parinfer.js'
-  "Plugin 'file:///Users/case/dev/clj-refactor.nvim'
-  "Plugin 'file:///Users/case/dev/paredit.nvim'
+if has('nvim')
+  "Plug 'roxma/nvim-completion-manager'
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  "Plug 'roxma/vim-hug-neovim-rpc'
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-" scripts from http://vim-scripts.org/vim/scripts.html
-Plugin 'gitignore'
+Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 
-" All of your Plugins must be added before the following line
-call vundle#end()
-filetype plugin indent on     
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'terryma/vim-multiple-cursors'
+
+"Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --manifest-path=cparinfer/Cargo.toml --release'}
+
+" All of your Plugs must be added before the following line
+call plug#end()
+
+let g:deoplete#enable_at_startup = 1
 
 set nocompatible
 set number
@@ -57,7 +53,9 @@ set clipboard=unnamed
 set background=dark
 colorscheme molokai
 set cursorline cursorcolumn
-highlight CursorColumn ctermbg=233
+highlight CursorColumn ctermbg=240
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " allow unsaved buffers
 set hidden
@@ -71,6 +69,7 @@ set wildmenu
 
 " show partial commands
 set showcmd
+let g:loaded_matchparen=1
 
 " highlight searchs
 set hlsearch
@@ -105,6 +104,8 @@ syntax on
 
 " So it matches D and C
 map Y y$
+map <F1> <nop>
+imap <F1> <nop>
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -162,16 +163,7 @@ au BufNewFile,BufRead *.json.template set filetype=javascript
 au BufNewFile,BufRead *.json set filetype=javascript
 
 " Clojure
-let g:paredit_mode = 1
-let g:paredit_leader = '\'
-let g:paredit_electric_return = 0
-let g:paredit_smartjump = 1
-let g:paredit_matchlines = 20000
-let g:clj_fmt_autosave = 1
-"let g:parinfer_mode = "indent"
-"nmap <S-Right> <ESC>:let g:parinfer_mode='paren'<CR> ]:let g:parinfer_mode='indent'<CR>
-
-let g:sexp_enable_insert_mode_mappings = 0
+let g:sexp_enable_insert_mode_mappings = 1
 
 let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build', '^def', '^.*loop$', '^-', '^this-as', '^with-', '^GET', '^POST', '^PUT', '^DELETE', '^PATCH', '^ANY', '^context', 'register', 'comment', 'try', 'cond', 'do'] 
 let g:clojure_special_indent_words = 'defprotocol'
@@ -206,10 +198,10 @@ vmap <Leader>w" S"
 "imap <S-Right> <C-O><Plug>(sexp_capture_next_element)<C-O>:exe "normal gg=G<C-o><C-o>"<CR>
 "imap <S-Left> <C-O><Plug>(sexp_emit_tail_element)<C-O>:exe "normal gg=G<C-o><C-o>"<CR>
 
-nmap <S-Right> <Plug>(sexp_capture_next_element)<Plug>(sexp_indent_top)
-nmap <S-Left> <Plug>(sexp_emit_tail_element)<Plug>(sexp_indent_top)
-imap <S-Right> <C-O><Plug>(sexp_capture_next_element)<Plug>(sexp_indent_top)
-imap <S-Left> <C-O><Plug>(sexp_emit_tail_element)<Plug>(sexp_indent_top)
+nmap <S-Right> <Plug>(sexp_capture_next_element)<Plug>(sexp_indent)
+nmap <S-Left> <Plug>(sexp_emit_tail_element)<Plug>(sexp_indent)
+imap <S-Right> <C-O><Plug>(sexp_capture_next_element)<C-O><Plug>(sexp_indent)
+imap <S-Left> <C-O><Plug>(sexp_emit_tail_element)<C-O><Plug>(sexp_indent)
 
 let g:sexp_mappings = {
       \ 'sexp_outer_list':                'af',
@@ -226,14 +218,61 @@ let g:sexp_mappings = {
       \ 'sexp_round_head_wrap_element':   '<Leader>W',
       \ 'sexp_swap_element_backward':     '<Leader>T',
       \ 'sexp_swap_element_forward':      '<Leader>t',
-      \ 'sexp_raise_element':             '<Leader>r',
+      \ 'sexp_raise_element':             '<Leader>''',
       \ 'sexp_emit_head_element':         '<Leader>{',
       \ 'sexp_emit_tail_element':         '<Leader>}',
       \ 'sexp_capture_prev_element':      '<Leader>[',
       \ 'sexp_capture_next_element':      '<Leader>]',
+      \ 'sexp_flow_to_next_open_bracket': '<M-f>',
+      \ 'sexp_flow_to_prev_open_bracket': '<M-b>',
       \ } 
 
-if !has("nvim")
-  echo "VIM"
-endif
+"au User lsp_setup call lsp#register_server({
+"        \ 'name': 'clj',
+"        \ 'cmd': {server_info->['bash', '-c', 'cd /Users/case/dev/lsp/ && clj -m aclaimant.lsp']},
+"        \ 'whitelist': ['clojure'],
+"        \ })
+"
+"let g:lsp_signs_enabled = 1         " enable signs
+"let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+"let g:lsp_log_verbose = 1
+"let g:lsp_log_file = expand('/tmp/vim-lsp.log')
+"let g:asyncomplete_log_file = expand('/tmp/asyncomplete.log')
+
+
+set hidden
+
+let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
+let $NVIM_NCM_LOG_LEVEL="DEBUG"
+let $NVIM_NCM_MULTI_THREAD=0
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'clojure': ['bash', '-c', 'cd /Users/case/dev/lsp/ && lein rrun'],
+    \ }
+"let g:LanguageClient_loggingLevel = 'DEBUG'
+"
+let g:LanguageClient_rootMarkers = {
+    \ 'clojure': ['project.clj', 'build.boot', 'deps.edn'],
+    \ 'rust': ['Cargo.toml'],
+    \ }
+
+function! Expand(exp) abort
+    let l:result = expand(a:exp)
+    return l:result ==# '' ? '' : "file://" . l:result
+endfunction
+
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+nnoremap <Leader>u :call LanguageClient_textDocument_references()<CR>:lopen<CR>
+nnoremap crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap crth :call LanguageClient#workspace_executeCommand('thread-first', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap crtt :call LanguageClient#workspace_executeCommand('thread-last', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap crtf :call LanguageClient#workspace_executeCommand('thread-first-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap crtl :call LanguageClient#workspace_executeCommand('thread-last-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap crml :call LanguageClient#workspace_executeCommand('move-to-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
+nnoremap cril :call LanguageClient#workspace_executeCommand('introduce-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
+
+set completefunc=LanguageClient#complete
 

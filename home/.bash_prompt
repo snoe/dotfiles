@@ -3,12 +3,6 @@
 
 default_username='case'
 
-if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
-	export TERM=gnome-256color
-elif infocmp xterm-256color >/dev/null 2>&1; then
-	export TERM=xterm-256color
-fi
-
 if tput setaf 1 &> /dev/null; then
 	tput sgr0
 	if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
@@ -43,14 +37,15 @@ function git_info() {
 
 # quickest check for what branch we're on
     branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
+    INITIALS=$(git config user.initials)
 
 # check if it's dirty (via github.com/sindresorhus/pure)
     dirty=$(git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ]&& echo -e "true")
 
     if [ $dirty ]; then
-      echo $WHITE" on "$ORANGE$branch"*";
+      echo $WHITE" on "${MAGENTA}[$INITIALS] $ORANGE$branch"*";
     else
-      echo $WHITE" on "$PURPLE$branch;
+      echo $WHITE" on "${MAGENTA}[$INITIALS] $PURPLE$branch;
     fi
 }
 
