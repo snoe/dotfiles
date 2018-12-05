@@ -4,6 +4,7 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/lib"
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
+export PATH=/Users/case/Library/Python/3.6/bin:$PATH
 export PATH="$HOME/.cargo/bin:$PATH"
 
 export GOPATH=~/.gopath
@@ -22,16 +23,12 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
 fi
 
-[ -s "/Users/case/.scm_breeze/scm_breeze.sh" ] && source "/Users/case/.scm_breeze/scm_breeze.sh"
-
 if [ -e $HOME/.homesick/repos/homeshick/homeshick.sh ]; then
   source "$HOME/.homesick/repos/homeshick/homeshick.sh"
   source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 fi
 
 export PROMPT_COMMAND="history -a ~/.bash_history.global"
-bind -x '"\C-r": "~/.swap_history_reverse.sh"'
-
 alias shares='cd ~/dev/shares && . ~/.shares  && . Envfile'
 alias acl='cd ~/dev/aclaimant && . Envfile && cd acl'
 alias lsp='cd ~/dev/lsp'
@@ -45,3 +42,8 @@ export LD_LIBRARY_PATH=/usr/local/cuda/lib:$LD_LIBRARY_PATH
 eval `ssh-agent -s` && ssh-add ~/.ssh/acl
 
 export RUST_SRC_PATH=~/.multirust/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/src
+
+[ -s "/Users/case/.scm_breeze/scm_breeze.sh" ] && source "/Users/case/.scm_breeze/scm_breeze.sh"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+bind -x '"\C-r": "~/.swap_history_reverse.sh"'

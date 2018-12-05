@@ -1,34 +1,32 @@
 call plug#begin('~/.vim/bundle')
 "" Plug 'aquach/vim-http-client'
-Plug 'guns/vim-sexp'
 "" Plug 'vim-scripts/paredit.vim'
+"Plug 'guns/vim-clojure-static'
+"Plug 'kien/ctrlp.vim'
+" Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-markdown'
+"Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --manifest-path=cparinfer/Cargo.toml --release'}
+"
+Plug 'snoe/vim-sexp'
 Plug 'airblade/vim-gitgutter'
 Plug 'bling/vim-airline'
 Plug 'ntpeters/vim-airline-colornum'
-Plug 'guns/vim-clojure-static'
-Plug 'kien/ctrlp.vim'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'rking/ag.vim'
-" Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fireplace'
-" Plug 'tpope/vim-fugitive'
-" Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'prabirshrestha/asyncomplete.vim'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 if has('nvim')
   "Plug 'roxma/nvim-completion-manager'
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
   "Plug 'roxma/vim-hug-neovim-rpc'
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
+  "Plug 'Shougo/deoplete.nvim'
+  "Plug 'roxma/nvim-yarp'
+  "Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
@@ -36,8 +34,6 @@ Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-multiple-cursors'
-
-"Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --manifest-path=cparinfer/Cargo.toml --release'}
 
 " All of your Plugs must be added before the following line
 call plug#end()
@@ -49,11 +45,11 @@ set number
 set splitbelow
 set splitright
 
+set mouse=a
 set clipboard=unnamed
 set background=dark
 colorscheme molokai
 set cursorline cursorcolumn
-highlight CursorColumn ctermbg=240
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
@@ -66,10 +62,10 @@ set visualbell t_vb=
 " better command line completion
 set wildmode=longest,list,full
 set wildmenu
+set completeopt=longest,menuone
 
 " show partial commands
 set showcmd
-let g:loaded_matchparen=1
 
 " highlight searchs
 set hlsearch
@@ -115,29 +111,19 @@ let g:airline_powerline_fonts = 1
 set laststatus=2
 let g:ctrlp_root_markers = ['project.clj']
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
+let g:multi_cursor_exit_from_insert_mode=0
 
 let mapleader = " "
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
-      \ ['brown',       'RoyalBlue3'],
-      \ ['blue',        'SeaGreen3'],
-      \ ['darkgray',    'DarkOrchid3'],
-      \ ['darkgreen',   'firebrick3'],
-      \ ['darkcyan',    'RoyalBlue3'],
-      \ ['darkred',     'SeaGreen3'],
-      \ ['darkmagenta', 'DarkOrchid3'],
-      \ ['brown',       'firebrick3'],
-      \ ['gray',        'RoyalBlue3'],
-      \ ['yellow',      'SeaGreen3'],
-      \ ['darkmagenta', 'DarkOrchid3'],
-      \ ['blue',        'firebrick3'],
-      \ ['darkgreen',   'RoyalBlue3'],
-      \ ['darkcyan',    'SeaGreen2'],
-      \ ['darkred',     'DarkOrchid3'],
-      \ ['red',         'firebrick3'],
+      \ [118, 118],
+      \ ['yellow', 'yellow'],
+      \ ['cyan', 'cyan'],
+      \ ['red', 'firebrick1'],
       \ ]
-au VimEnter * RainbowParenthesesToggle
+
+au VimEnter * RainbowParenthesesActivate
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
@@ -156,19 +142,23 @@ inoremap <Nul> <C-x><C-o>
 nnoremap <silent> <C-L> :nohls<CR><C-L>
 
 " whitespace
-autocmd FileType c,cpp,python,ruby,javascript,html,java,coffee,less,scss,css,clojure,yaml,make autocmd BufWritePre <buffer> :exe '%s/\s\+$//e'
+autocmd FileType sql,c,cpp,python,ruby,javascript,html,java,coffee,less,scss,css,clojure,yaml,make autocmd BufWritePre <buffer> :exe '%s/\s\+$//e'
 
 au BufNewFile,BufRead *.less set filetype=less
 au BufNewFile,BufRead *.json.template set filetype=javascript
 au BufNewFile,BufRead *.json set filetype=javascript
 
+nnoremap <silent> <C-P> :GFiles --cached --exclude-standard --others<CR>
+
 " Clojure
 let g:sexp_enable_insert_mode_mappings = 1
 
-let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build', '^def', '^.*loop$', '^-', '^this-as', '^with-', '^GET', '^POST', '^PUT', '^DELETE', '^PATCH', '^ANY', '^context', 'register', 'comment', 'try', 'cond', 'do'] 
-let g:clojure_special_indent_words = 'defprotocol'
-let g:clojure_fuzzy_indent_blacklist = ['->', '->>']
-let g:clojure_align_subforms = 1
+let g:clojure_fuzzy_indent_patterns = ['^doto', '^with', '^def', '^let', 'go-loop', 'match', '^context', '^GET', '^PUT', '^POST', '^PATCH', '^DELETE', '^ANY', 'this-as', '^are']
+let g:clojure_align_multiline_strings = 1
+"let g:clojure_fuzzy_indent_patterns = ['^dom/.*', '^build', '^def', '^.*loop$', '^-', '^this-as', '^with-', '^GET', '^POST', '^PUT', '^DELETE', '^PATCH', '^ANY', '^context', 'register', 'comment', 'try', 'cond', 'do']
+"let g:clojure_special_indent_words = 'defprotocol'
+"let g:clojure_fuzzy_indent_blacklist = ['->', '->>']
+"let g:clojure_align_subforms = 1
 
 let g:clj_refactor_prefix_rewriting=0
 
@@ -227,52 +217,62 @@ let g:sexp_mappings = {
       \ 'sexp_flow_to_prev_open_bracket': '<M-b>',
       \ } 
 
-"au User lsp_setup call lsp#register_server({
-"        \ 'name': 'clj',
-"        \ 'cmd': {server_info->['bash', '-c', 'cd /Users/case/dev/lsp/ && clj -m aclaimant.lsp']},
-"        \ 'whitelist': ['clojure'],
-"        \ })
-"
-"let g:lsp_signs_enabled = 1         " enable signs
-"let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-"let g:lsp_log_verbose = 1
-"let g:lsp_log_file = expand('/tmp/vim-lsp.log')
-"let g:asyncomplete_log_file = expand('/tmp/asyncomplete.log')
-
 
 set hidden
 
-let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
-let $NVIM_NCM_LOG_LEVEL="DEBUG"
-let $NVIM_NCM_MULTI_THREAD=0
-
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-    \ 'clojure': ['bash', '-c', 'cd /Users/case/dev/lsp/ && lein rrun'],
+    \ 'rust': ['rls'],
+    \ 'clojure': ['bash', '-c', 'cd /Users/case/dev/lsp/ && lein run'],
+    \ 'java': ['bash', '-c', 'cd /Users/case/dev/jdtls/org.eclipse.jdt.ls.product/target/repository && java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044 -Declipse.application=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.protocol=true -Dlog.level=ALL -noverify -Xmx1G -jar ./plugins/org.eclipse.equinox.launcher_1.5.0.v20180207-1446.jar -configuration ./config_mac -data /Users/case/dev/lib-java'],
     \ }
+
 "let g:LanguageClient_loggingLevel = 'DEBUG'
-"
+
 let g:LanguageClient_rootMarkers = {
     \ 'clojure': ['project.clj', 'build.boot', 'deps.edn'],
     \ 'rust': ['Cargo.toml'],
     \ }
+
+set signcolumn=yes
+
+let g:LanguageClient_selectionUI="quickfix"
+let g:LanguageClient_diagnosticsList="Disabled"
+let g:LanguageClient_settingsPath=".lsp/settings.json"
+let g:LanguageClient_loggingFile="/tmp/languageclient.log"
+let g:LanguageClient_loggingLevel="DEBUG"
 
 function! Expand(exp) abort
     let l:result = expand(a:exp)
     return l:result ==# '' ? '' : "file://" . l:result
 endfunction
 
+nnoremap <silent> crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap <silent> crth :call LanguageClient#workspace_executeCommand('thread-first', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap <silent> crtt :call LanguageClient#workspace_executeCommand('thread-last', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap <silent> crtf :call LanguageClient#workspace_executeCommand('thread-first-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap <silent> crtl :call LanguageClient#workspace_executeCommand('thread-last-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap <silent> crml :call LanguageClient#workspace_executeCommand('move-to-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
+nnoremap <silent> cril :call LanguageClient#workspace_executeCommand('introduce-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
+nnoremap <silent> crel :call LanguageClient#workspace_executeCommand('expand-let', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+nnoremap <silent> cram :call LanguageClient#workspace_executeCommand('add-missing-libspec', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
+
 nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-nnoremap <Leader>u :call LanguageClient_textDocument_references()<CR>:lopen<CR>
-nnoremap crcc :call LanguageClient#workspace_executeCommand('cycle-coll', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap crth :call LanguageClient#workspace_executeCommand('thread-first', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap crtt :call LanguageClient#workspace_executeCommand('thread-last', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap crtf :call LanguageClient#workspace_executeCommand('thread-first-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap crtl :call LanguageClient#workspace_executeCommand('thread-last-all', [Expand('%:p'), line('.') - 1, col('.') - 1])<CR>
-nnoremap crml :call LanguageClient#workspace_executeCommand('move-to-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
-nnoremap cril :call LanguageClient#workspace_executeCommand('introduce-let', [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')])<CR>
+nnoremap <silent> <Leader>u :call LanguageClient_textDocument_references()<CR>:copen<CR>
 
-set completefunc=LanguageClient#complete
+au VimEnter * silent! augroup! fireplace_formatting
+au VimEnter * setlocal formatexpr=LanguageClient#textDocument_rangeFormatting()
+autocmd FileType clojure setlocal completefunc=LanguageClient#complete
+
+highlight MatchParen cterm=bold ctermbg=none ctermfg=magenta
+highlight CursorColumn ctermbg=233
+
+function! Airline(...)
+  if &filetype =~ 'clojure'
+    let w:airline_section_a = g:airline_section_a . ' %{g:LanguageClient_loaded}'
+  endif
+endfunction
+
+call airline#add_statusline_func('Airline')
 
