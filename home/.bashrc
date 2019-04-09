@@ -47,3 +47,5 @@ export RUST_SRC_PATH=~/.multirust/toolchains/nightly-x86_64-apple-darwin/lib/rus
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 bind -x '"\C-r": "~/.swap_history_reverse.sh"'
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

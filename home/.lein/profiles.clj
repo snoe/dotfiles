@@ -1,13 +1,8 @@
 {:user
  {:plugins
   [[lein-clojars "0.9.1"]
-   [lein-kibit "0.1.2" :exclusions [org.clojure/clojure]]
-   [lein-ancient "0.6.8" :exclusions [org.clojure/clojure org.clojure/tools.reader]]
-   [jonase/eastwood "0.2.3" :exclusions [org.clojure/clojure]]
-   [lein-describe "0.2.0"]
-   [lein-try "0.4.3"]
    [lein-deploy-deps "0.1.0"]
-   [com.jakemccrary/lein-test-refresh "0.18.0"]]
+   [com.jakemccrary/lein-test-refresh "0.22.0"]]
 
   :dependencies
   [[clj-stacktrace "0.2.8"]
