@@ -1,0 +1,64 @@
+{
+   "languageserver": {
+    "clojure-lsp": {
+      "command": "bash",
+      "args": ["-c", "cd /Users/case/dev/lsp/ && lein run"],
+      "filetypes": ["clojure"],
+      "rootPatterns": ["project.clj"],
+      "trace.server": "verbose",
+      "initializationOptions": {
+        "source-paths": ["shared-src", "src", "test", "dashboard/src"],
+        "cljfmt": {
+          "indents": {
+            "#.*": [["block", 0]],
+            "ns": [["inner", 0], ["inner", 1]],
+            "and": [["inner", 0]],
+            "or": [["inner", 0]],
+            "are": [["inner", 0]]
+        }},
+        "macro-defs": {
+          "re-frame.core/reg-sub": [
+            {
+              "element": "declaration",
+              "signature": ["rightmost", "next", "next", "next", "right"]
+            },
+            "element"
+          ],
+          "re-frame.core/reg-event-db": [
+            {
+              "element": "declaration",
+              "signature": ["next", "next", "next", "right"]
+            },
+            "element"
+          ],
+          "re-frame.core/reg-event-fx": [
+            {
+              "element": "declaration",
+              "signature": ["next", "next", "next", "right"]
+            },
+            "element"
+          ],
+          "re-frame.core/reg-event-db": [
+            {
+              "element": "declaration",
+              "signature": ["next", "next", "next", "right"]
+            },
+            "element"
+          ],
+          "korma.core/defentity": [
+            {
+              "element": "declaration"
+            },
+            "elements"],
+          "aclaimant.dashboard.util.macros/dofor": ["bindings", "bound-elements"],
+          "aclaimant.services.core.compojure.meta/GET": ["_", "element", "function-params-and-bodies"],
+          "aclaimant.services.core.compojure.meta/PUT": ["_", "element", "function-params-and-bodies"],
+          "aclaimant.services.core.compojure.meta/POST": ["_", "element", "function-params-and-bodies"],
+          "aclaimant.services.core.compojure.meta/PATCH": ["_", "element", "function-params-and-bodies"],
+          "aclaimant.services.core.compojure.meta/DELETE": ["_", "element", "function-params-and-bodies"],
+          "aclaimant.services.core.compojure.meta/context": ["_", "element", "function-params-and-bodies"]
+        }
+      }
+    }
+  }
+}
