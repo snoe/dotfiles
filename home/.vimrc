@@ -4,7 +4,7 @@ Plug 'fmoralesc/molokayo'
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-markdown'
+Plug 'plasticboy/vim-markdown'
 
 Plug 'snoe/vim-sexp'
 Plug 'airblade/vim-gitgutter'
@@ -34,6 +34,7 @@ set number
 set splitbelow
 set splitright
 
+let mapleader = " "
 set mouse=a
 set clipboard=unnamed
 set background=dark
@@ -123,7 +124,6 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
-let mapleader = " "
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
@@ -138,7 +138,7 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 let g:markdown_fenced_languages = ['css', 'js=javascript', 'clojure']
-
+let g:vim_markdown_folding_disabled = 1
 
 set backup
 set backupdir=~/.vim/backup
@@ -228,6 +228,9 @@ nmap <leader>u <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
 command! -nargs=0 Format :call CocAction('format')
 
+let g:coc_enable_locationlist = 0
+autocmd User CocLocationsChange CocList --normal location
+
 inoremap <silent><expr> <c-space> coc#refresh()
 nmap <silent> [l <Plug>(coc-diagnostic-prev)
 nmap <silent> ]l <Plug>(coc-diagnostic-next)
@@ -264,7 +267,17 @@ nnoremap <silent> crel :call CocRequest('clojure-lsp', 'workspace/executeCommand
 nnoremap <silent> cram :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'add-missing-libspec', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> crcn :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'clean-ns', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 
+autocmd BufReadCmd,FileReadCmd,SourceCmd jar:file://* call s:LoadClojureContent(expand("<amatch>"))
+ function! s:LoadClojureContent(uri)
+  setfiletype clojure
+  let content = CocRequest('clojure-lsp', 'clojure/dependencyContents', {'uri': a:uri})
+  call setline(1, split(content, "\n"))
+  setl nomodified
+  setl readonly
+endfunction
+
 highlight Normal guibg=#101010 guifg=white
 highlight CursorColumn guibg=#202020
+highlight Keyword guifg=#FFAB52
 highlight CursorLine guibg=#202020
 

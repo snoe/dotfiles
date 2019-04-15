@@ -1,12 +1,15 @@
 {
+  "suggest.snippetIndicator": "🍦",
    "languageserver": {
     "clojure-lsp": {
       "command": "bash",
       "args": ["-c", "cd /Users/case/dev/lsp/ && lein run"],
       "filetypes": ["clojure"],
       "rootPatterns": ["project.clj"],
+      "additionalSchemes": ["jar", "zipfile"],
       "trace.server": "verbose",
       "initializationOptions": {
+        //"dependency-scheme": "jar",
         "source-paths": ["shared-src", "src", "test", "dashboard/src"],
         "cljfmt": {
           "indents": {
