@@ -30,6 +30,14 @@ else
 	RESET="\033[m"
 fi
 
+function git_initials {
+  initials=$(git mob-print --initials)
+  if git status > /dev/null 2>&1; then
+    if [[ -n "${initials}" ]]; then
+      echo $initials
+    fi
+  fi
+}
 
 function git_info() {
 # check if we're in a git repo
@@ -37,7 +45,7 @@ function git_info() {
 
 # quickest check for what branch we're on
     branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
-    INITIALS=$(git config user.initials)
+    INITIALS=$(git_initials)
 
 # check if it's dirty (via github.com/sindresorhus/pure)
     dirty=$(git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ]&& echo -e "true")

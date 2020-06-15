@@ -1,7 +1,11 @@
 {
+  "coc.preferences.useQuickfixForLocations": true,
   "suggest.snippetIndicator": "🍦",
-   "languageserver": {
+  "languageserver": {
     "clojure-lsp": {
+      // "command": "bash",
+      // "args": ["-c", "cd /Users/case/dev/lsp && clojure -J-Duser.dir=$PWD -Scp $(clj -Spath) -m clojure-lsp.main"],
+      // "args": ["-c", "export LEIN_JVM_OPTS=\"-Duser.dir=$cwd\" && cd /Users/case/dev/lsp/ && lein run"],
       "command": "bash",
       "args": ["-c", "cd /Users/case/dev/lsp/ && lein run"],
       "filetypes": ["clojure"],
@@ -9,6 +13,7 @@
       "additionalSchemes": ["jar", "zipfile"],
       "trace.server": "verbose",
       "initializationOptions": {
+        "ignore-classpath-directories": true
       }
     }
   }

@@ -101,6 +101,9 @@ map Y y$
 map <F1> <nop>
 imap <F1> <nop>
 
+" close buffers like browser tabs
+noremap <expr><leader>q (bufnr("") == getbufinfo({"buflisted": 1})[-1].bufnr ? ":bp" : ":bn")."<bar>bd #<CR>"
+
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 0
@@ -127,7 +130,7 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
-      \ [118, 118],
+      \ ['201', '#FF00FF'],
       \ ['yellow', 'yellow'],
       \ ['cyan', 'cyan'],
       \ ['red', 'firebrick1'],
@@ -164,6 +167,7 @@ au BufNewFile,BufRead *.json.template set filetype=javascript
 au BufNewFile,BufRead *.json set filetype=javascript
 
 nnoremap <silent> <C-P> :GFiles --cached --exclude-standard --others<CR>
+command Bd %bd|e#|bd#
 
 " Clojure
 let g:sexp_enable_insert_mode_mappings = 1
@@ -218,6 +222,13 @@ let g:sexp_mappings = {
       \ 'sexp_flow_to_prev_open_bracket': '<M-b>',
       \ } 
 
+
+"call lsp#add_filetype_config({
+"          \ 'filetype': 'clojure',
+"          \ 'name': 'clojure-lsp',
+"          \ 'cmd': ['bash', '-c', 'cd /Users/case/dev/lsp/ && lein run'],
+"          \ })
+
 " COC
 let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
 let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
@@ -228,8 +239,8 @@ nmap <leader>u <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
 command! -nargs=0 Format :call CocAction('format')
 
-let g:coc_enable_locationlist = 0
-autocmd User CocLocationsChange CocList --normal location
+"let g:coc_enable_locationlist = 0
+"autocmd User CocLocationsChange CocList --normal location
 
 inoremap <silent><expr> <c-space> coc#refresh()
 nmap <silent> [l <Plug>(coc-diagnostic-prev)
@@ -268,6 +279,8 @@ nnoremap <silent> cril :call CocRequest('clojure-lsp', 'workspace/executeCommand
 nnoremap <silent> crel :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'expand-let', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> cram :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'add-missing-libspec', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> crcn :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'clean-ns', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crcp :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-privacy', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> cris :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'inline-symbol', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> cref :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'extract-function', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Function name: ')]})<CR>
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
@@ -277,7 +290,9 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
+nmap <leader>aq  <Plug>(coc-fix-current)
+" workspace symbols 
+nnoremap <silent><leader>s  :<C-u>CocList -I symbols<cr>
 
 autocmd BufReadCmd,FileReadCmd,SourceCmd jar:file://* call s:LoadClojureContent(expand("<amatch>"))
  function! s:LoadClojureContent(uri)
@@ -292,4 +307,6 @@ highlight Normal guibg=#101010 guifg=white
 highlight CursorColumn guibg=#202020
 highlight Keyword guifg=#FFAB52
 highlight CursorLine guibg=#202020
+hi clear CocHighlightText
+hi CocHighlightText guibg=#472004
 
