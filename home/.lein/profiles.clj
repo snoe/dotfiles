@@ -2,7 +2,7 @@
  {:plugins
   [[lein-clojars "0.9.1"]
    [lein-deploy-deps "0.1.0"]
-   [com.jakemccrary/lein-test-refresh "0.22.0"]]
+   [com.jakemccrary/lein-test-refresh "0.24.1"]]
 
   :dependencies
   [[clj-stacktrace "0.2.8"]
@@ -24,6 +24,7 @@
    :changes-only true
    :quiet true}}
 
+ #_#_
  :repl
  {:plugins
   [[refactor-nrepl "2.3.0-SNAPSHOT"]

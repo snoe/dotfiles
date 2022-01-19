@@ -15,14 +15,14 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'rking/ag.vim'
 Plug 'guns/vim-clojure-static'
 Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-salve'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-rhubarb'
 Plug 'drewtempelmeyer/palenight.vim'
-
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-
-Plug '/usr/local/opt/fzf'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-multiple-cursors'
 
@@ -52,6 +52,7 @@ set visualbell t_vb=
 set signcolumn=yes
 set laststatus=2
 set updatetime=300
+set redrawtime=5000
 if (has("termguicolors"))
   set termguicolors
 endif
@@ -282,6 +283,7 @@ nnoremap <silent> crcn :call CocRequest('clojure-lsp', 'workspace/executeCommand
 nnoremap <silent> crcp :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-privacy', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> cris :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'inline-symbol', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> cref :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'extract-function', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Function name: ')]})<CR>
+nnoremap <silent> crsi :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'server-info'})<CR>
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 vmap <leader>a  <Plug>(coc-codeaction-selected)
