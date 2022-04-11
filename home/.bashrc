@@ -6,6 +6,7 @@ export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export PATH=/Users/case/Library/Python/3.6/bin:$PATH
 export PATH="$HOME/.cargo/bin:$PATH"
+export BASH_SILENCE_DEPRECATION_WARNING=1
 
 export GOPATH=~/.gopath
 export GOBIN=~/.gopath
@@ -30,8 +31,8 @@ fi
 
 export PROMPT_COMMAND="history -a ~/.bash_history.global"
 alias shares='cd ~/dev/shares && . ~/.shares  && . Envfile'
-alias acl='cd ~/dev/aclaimant && . Envfile && cd acl'
 alias lsp='cd ~/dev/lsp'
+alias idc='cd ~/dev/idc'
 
 alias em="emacsclient"
 homeshick --quiet refresh
@@ -39,7 +40,7 @@ homeshick --quiet refresh
 export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/cuda/lib:$LD_LIBRARY_PATH
 #. /Users/case/torch/install/bin/torch-activate
-eval `ssh-agent -s` && ssh-add ~/.ssh/acl
+eval `ssh-agent -s && ssh-add ~/.ssh/id_rsa`
 
 export RUST_SRC_PATH=~/.multirust/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/src
 
@@ -49,3 +50,7 @@ export RUST_SRC_PATH=~/.multirust/toolchains/nightly-x86_64-apple-darwin/lib/rus
 bind -x '"\C-r": "~/.swap_history_reverse.sh"'
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+. "$HOME/.cargo/env"

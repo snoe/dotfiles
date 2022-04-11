@@ -1,27 +1,34 @@
+" let $NVIM_COC_LOG_LEVEL='trace'
+
 call plug#begin('~/.vim/bundle')
 Plug 'tomasr/molokai'
 Plug 'fmoralesc/molokayo'
+Plug 'drewtempelmeyer/palenight.vim'
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-salve'
+Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-rhubarb'
+
 Plug 'plasticboy/vim-markdown'
 
 Plug 'snoe/vim-sexp'
 Plug 'airblade/vim-gitgutter'
 Plug 'bling/vim-airline'
+Plug 'chrisbra/csv.vim'
 
-Plug 'ntpeters/vim-airline-colornum'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'rking/ag.vim'
-Plug 'guns/vim-clojure-static'
-Plug 'tpope/vim-fireplace'
-Plug 'tpope/vim-salve'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-rhubarb'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'romgrk/barbar.nvim'
+
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-multiple-cursors'
@@ -102,32 +109,28 @@ map Y y$
 map <F1> <nop>
 imap <F1> <nop>
 
-" close buffers like browser tabs
-noremap <expr><leader>q (bufnr("") == getbufinfo({"buflisted": 1})[-1].bufnr ? ":bp" : ":bn")."<bar>bd #<CR>"
+let g:multi_cursor_exit_from_insert_mode=0
 
 let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 0
-let g:airline#extensions#tabline#buffer_nr_format = '%s|'
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline#extensions#tabline#current_first = 0
-let g:airline#extensions#tabline#show_splits = 1
 
-let g:airline#extensions#hunks#enabled = 0
-let g:airline_powerline_fonts = 1
-let g:multi_cursor_exit_from_insert_mode=0
-nmap [b <Plug>AirlineSelectPrevTab
-nmap ]b <Plug>AirlineSelectNextTab
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-
+let bufferline = get(g:, 'bufferline', {})
+let bufferline.auto_hide = v:false
+let bufferline.icons = 'both'
+"
+" close buffers like browser tabs
+command Bd BufferCloseBuffersRight
+nmap <leader>q :BufferWipeout<CR>
+nmap [b :BufferPrevious<CR>
+nmap ]b :BufferNext<CR>
+nmap <leader>1 :BufferGoto 1<CR>
+nmap <leader>2 :BufferGoto 2<CR>
+nmap <leader>3 :BufferGoto 3<CR>
+nmap <leader>4 :BufferGoto 4<CR>
+nmap <leader>5 :BufferGoto 5<CR>
+nmap <leader>6 :BufferGoto 6<CR>
+nmap <leader>7 :BufferGoto 7<CR>
+nmap <leader>8 :BufferGoto 8<CR>
+nmap <leader>9 :BufferGoto 9<CR>
 
 " RainbowParen config
 let g:rbpt_colorpairs = [
@@ -166,9 +169,9 @@ autocmd FileType markdown,sql,c,cpp,python,ruby,javascript,html,java,coffee,less
 au BufNewFile,BufRead *.less set filetype=less
 au BufNewFile,BufRead *.json.template set filetype=javascript
 au BufNewFile,BufRead *.json set filetype=javascript
+au BufNewFile,BufRead *.bb set filetype=clojure
 
-nnoremap <silent> <C-P> :GFiles --cached --exclude-standard --others<CR>
-command Bd %bd|e#|bd#
+nnoremap <silent> <C-P> :GFiles<CR>
 
 " Clojure
 let g:sexp_enable_insert_mode_mappings = 1
@@ -212,8 +215,8 @@ let g:sexp_mappings = {
       \ 'sexp_move_to_next_bracket':      ')',
       \ 'sexp_indent_top':                '=-',
       \ 'sexp_round_head_wrap_element':   '<Leader>W',
-      \ 'sexp_swap_element_backward':     '<Leader>T',
-      \ 'sexp_swap_element_forward':      '<Leader>t',
+      \ 'sexp_swap_element_backward':     '<Leader>C',
+      \ 'sexp_swap_element_forward':      '<Leader>c',
       \ 'sexp_raise_element':             '<Leader>''',
       \ 'sexp_emit_head_element':         '<Leader>{',
       \ 'sexp_emit_tail_element':         '<Leader>}',
@@ -283,27 +286,37 @@ nnoremap <silent> crcn :call CocRequest('clojure-lsp', 'workspace/executeCommand
 nnoremap <silent> crcp :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-privacy', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> cris :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'inline-symbol', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> cref :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'extract-function', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Function name: ')]})<CR>
-nnoremap <silent> crsi :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'server-info'})<CR>
+nnoremap <silent> crci :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cursor-info', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crsi :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'server-info', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> <leader>T :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'move-coll-entry-up', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> <leader>t :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'move-coll-entry-down', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crmf :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'move-form', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input("File: ", "", "file")]})<CR>
+nnoremap <silent> crfe :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'create-function', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+
+" Copies the log-path to your clipboard
+nnoremap <silent> crsl :call setreg('*', CocRequest('clojure-lsp', 'clojure/serverInfo/raw')['log-path'])<CR>
+" Connects to nrepl
+nnoremap <silent> crsp :execute 'Connect' CocRequest('clojure-lsp', 'clojure/serverInfo/raw')['port']<CR>
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 vmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <leader>ac  <Plug>(coc-codeaction-cursor)
 " Fix autofix problem of current line
 nmap <leader>aq  <Plug>(coc-fix-current)
 " workspace symbols 
 nnoremap <silent><leader>s  :<C-u>CocList -I symbols<cr>
 
-autocmd BufReadCmd,FileReadCmd,SourceCmd jar:file://* call s:LoadClojureContent(expand("<amatch>"))
- function! s:LoadClojureContent(uri)
+function! s:LoadClojureContent(uri)
   setfiletype clojure
   let content = CocRequest('clojure-lsp', 'clojure/dependencyContents', {'uri': a:uri})
   call setline(1, split(content, "\n"))
   setl nomodified
   setl readonly
 endfunction
+autocmd BufReadCmd,FileReadCmd,SourceCmd jar:file://* call s:LoadClojureContent(expand("<amatch>"))
 
 highlight Normal guibg=#101010 guifg=white
 highlight CursorColumn guibg=#202020
@@ -311,4 +324,9 @@ highlight Keyword guifg=#FFAB52
 highlight CursorLine guibg=#202020
 hi clear CocHighlightText
 hi CocHighlightText guibg=#472004
+hi CocFadeOut gui=undercurl cterm=undercurl
 
+function! SynGroup()                                                            
+    let l:s = synID(line('.'), col('.'), 1)                                       
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
