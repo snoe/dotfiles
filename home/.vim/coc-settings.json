@@ -12,7 +12,7 @@
       //"command": "bash",
       //"args": ["-c", "cd /Users/case/dev/lsp/cli && clj -M:run"],
       //"command": "clojure-lsp",
-      "command": "/Users/case/dev/lsp/clojure-lsp",
+      "command": "/Users/snoe/dev/clojure-lsp/clojure-lsp",
       "filetypes": ["clojure"],
       "rootPatterns": ["project.clj", "deps.edn"],
       "additionalSchemes": ["jar", "zipfile"],
@@ -21,7 +21,6 @@
       "diagnostic.showDeprecated": true,
       "diagnostic.highlightPriority": 1000000,
       "initializationOptions": {
-        "log-path": "/tmp/lsp.out",
         "ignore-classpath-directories": true
       }
     }

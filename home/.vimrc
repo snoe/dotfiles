@@ -240,6 +240,7 @@ let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <leader>u <Plug>(coc-references)
+nmap <leader>i <Plug>(coc-implementation)
 nmap <leader>rn <Plug>(coc-rename)
 command! -nargs=0 Format :call CocAction('format')
 

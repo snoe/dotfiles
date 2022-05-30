@@ -1,12 +1,17 @@
 #echo "bashrc"
 
-export JAVA_HOME=$(/usr/libexec/java_home)
 export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/lib"
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export PATH=/Users/case/Library/Python/3.6/bin:$PATH
-export PATH="$HOME/.cargo/bin:$PATH"
 export BASH_SILENCE_DEPRECATION_WARNING=1
+export HOMEBREW_NO_ENV_HINTS=1
+
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.jenv/bin:$PATH"
+export PATH="$HOME/dev/flutter/bin:$PATH"
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
 
 export GOPATH=~/.gopath
 export GOBIN=~/.gopath
@@ -33,6 +38,7 @@ export PROMPT_COMMAND="history -a ~/.bash_history.global"
 alias shares='cd ~/dev/shares && . ~/.shares  && . Envfile'
 alias lsp='cd ~/dev/lsp'
 alias idc='cd ~/dev/idc'
+alias mb="cd ~/dev/metabase"
 
 alias em="emacsclient"
 homeshick --quiet refresh
@@ -53,4 +59,8 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="$PATH":"$HOME/.pub-cache/bin"
 
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-. "$HOME/.cargo/env"
+alias vim=nvim
+
+source /usr/local/opt/autoenv/activate.sh
+
+[ -s "/Users/snoe/.scm_breeze/scm_breeze.sh" ] && source "/Users/snoe/.scm_breeze/scm_breeze.sh"
